@@ -39,7 +39,7 @@ void debug(const char *fmt, ...)
 int main(void)
 {
 	FILE *fd;
-	int i, ret, numlines, distance;
+	int i, j, ret, count, numlines, distance, simil;
 	char buf[LINE_SIZE+2]; /* include \n\0 */
 
 	fd = fopen(FILENAME, "r");
@@ -67,12 +67,19 @@ int main(void)
 	qsort(left, numlines, sizeof(int), cmpint);
 	qsort(right, numlines, sizeof(int), cmpint);
 	distance = 0;
+	simil = 0;
 	for (i=0; i<numlines; i++) {
 		debug("A = %d ", left[i]);
 		debug("B = %d\n", right[i]);
 		distance += abs(right[i] - left[i]);
 		debug("DISTANCE = %d\n", distance);
-	}
 
+		count = 0;
+		for (j=0; j<numlines; j++)
+			if (left[i] == right[j])
+				++count;
+		simil += left[i] * count;
+	}
 	printf("DISTANCE = %d\n", distance);
+	printf("SIMILARITY = %d\n", simil);
 }
