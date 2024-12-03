@@ -13,21 +13,19 @@ int main(void)
 	char buf[LINE_SIZE + 2]; /* include \n\0 */
 
 	fd = fopen(FILENAME, "r");
-	if (!fd) {
-		perror("fopen");
-		exit(EXIT_FAILURE);
-	}
+	if (!fd)
+		error("fopen");
 
 	numlines = 0;
 	while (fgets(buf, sizeof(buf), fd))
 		++numlines;
-	debug("\nNUM_LINES = %d\n", numlines);
+	debug("NUM_LINES = %d", numlines);
 
 	fseek(fd, 0, SEEK_SET);
 	int left[numlines], right[numlines];
 	i = 0;
 	while (fgets(buf, sizeof(buf), fd)) {
-		debug("\nLINE: %s\n", buf);
+		debug("LINE: %s", buf);
 		parseln_int(buf, &left[i], &right[i], LINE_SIZE, ELEM_SIZE);
 		++i;
 	}
@@ -39,9 +37,9 @@ int main(void)
 	simil = 0;
 	for (i = 0; i < numlines; i++) {
 		debug("A = %d ", left[i]);
-		debug("B = %d\n", right[i]);
+		debug("B = %d", right[i]);
 		distance += abs(right[i] - left[i]);
-		debug("DISTANCE = %d\n", distance);
+		debug("DISTANCE = %d", distance);
 
 		count = 0;
 		for (j = 0; j < numlines; j++)
@@ -49,6 +47,6 @@ int main(void)
 				++count;
 		simil += left[i] * count;
 	}
-	printf("DISTANCE = %d\n", distance);
-	printf("SIMILARITY = %d\n", simil);
+	printf("DISTANCE = %d", distance);
+	printf("SIMILARITY = %d", simil);
 }
