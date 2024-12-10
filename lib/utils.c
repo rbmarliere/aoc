@@ -34,7 +34,7 @@ int cmpint(const void *a, const void *b)
 	return ia > ib;
 }
 
-void parseln_int(char *buf, int *a, int *b, int linesz, int width)
+void parseln_lr(char *buf, int *a, int *b, int linesz, int width)
 {
 	debug("parseln_int");
 	char sub[width + 1]; /* + \0 */
@@ -47,11 +47,11 @@ void parseln_int(char *buf, int *a, int *b, int linesz, int width)
 	debug("b = %d", b);
 }
 
-void parseln_intnode(char *buf, char *sep, struct list_head *head)
+int parseln(char *buf, char *sep, parseln_handler handler, void *ctx)
 {
 	debug("parseln_intnode");
 	char tmp[BUFMAX], c;
-	int i = 0;
+	int i = 0, length = 0, value;
 
 	while ((c = *buf++)) {
 		if (c == *sep) {
@@ -62,13 +62,15 @@ void parseln_intnode(char *buf, char *sep, struct list_head *head)
 
 		if (tmp[i] == 0 || tmp[i] == '\n') {
 			i = -1;
-			struct int_node *new = malloc(sizeof(struct int_node));
-			new->value = atoi(tmp);
-			list_add_tail(&new->node, head);
-			debug("new = %d", new->value);
+			++length;
+			value = atoi(tmp);
+			debug("read %d", value);
+			handler(value, ctx);
 			memset(tmp, 0, sizeof(tmp));
 		}
 
 		++i;
 	}
+
+	return length;
 }

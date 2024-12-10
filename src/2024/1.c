@@ -26,7 +26,7 @@ int main(void)
 	i = 0;
 	while (fgets(buf, sizeof(buf), fd)) {
 		debug("LINE: %s", buf);
-		parseln_int(buf, &left[i], &right[i], LINE_SIZE, ELEM_SIZE);
+		parseln_lr(buf, &left[i], &right[i], LINE_SIZE, ELEM_SIZE);
 		++i;
 	}
 	fclose(fd);

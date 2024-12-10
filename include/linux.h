@@ -7,14 +7,8 @@ struct list_head {
 	struct list_head *next, *prev;
 };
 
-static inline int list_is_head(const struct list_head *list,
-			       const struct list_head *head)
-{
-	return list == head;
-}
-
-static inline void list_add(struct list_head *new, struct list_head *prev,
-			    struct list_head *next)
+static inline void __list_add(struct list_head *new, struct list_head *prev,
+			      struct list_head *next)
 {
 	next->prev = new;
 	new->next = next;
@@ -22,9 +16,26 @@ static inline void list_add(struct list_head *new, struct list_head *prev,
 	prev->next = new;
 }
 
+static inline int list_is_head(const struct list_head *list,
+			       const struct list_head *head)
+{
+	return list == head;
+}
+
+static inline void list_del(struct list_head *entry)
+{
+	entry->prev->next = entry->next;
+	entry->next->prev = entry->prev;
+}
+
+static inline void list_add(struct list_head *new, struct list_head *head)
+{
+	__list_add(new, head, head->next);
+}
+
 static inline void list_add_tail(struct list_head *new, struct list_head *head)
 {
-	list_add(new, head->prev, head);
+	__list_add(new, head->prev, head);
 }
 
 static inline void INIT_LIST_HEAD(struct list_head *list)
@@ -46,6 +57,9 @@ static inline void INIT_LIST_HEAD(struct list_head *list)
 
 #define list_entry_is_head(pos, head, member) list_is_head(&pos->member, (head))
 
+#define list_prev_entry(pos, member) \
+	list_entry((pos)->member.prev, typeof(*(pos)), member)
+
 #define list_next_entry(pos, member) \
 	list_entry((pos)->member.next, typeof(*(pos)), member)
 
@@ -53,5 +67,9 @@ static inline void INIT_LIST_HEAD(struct list_head *list)
 	for (pos = list_first_entry(head, typeof(*pos), member); \
 	     !list_entry_is_head(pos, head, member);             \
 	     pos = list_next_entry(pos, member))
+
+#define list_for_each_safe(pos, n, head)                                    \
+	for (pos = (head)->next, n = pos->next; !list_is_head(pos, (head)); \
+	     pos = n, n = pos->next)
 
 #endif

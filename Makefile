@@ -18,7 +18,7 @@ DEBUG =
 ifeq ($(strip $(DEBUG)),)
 	CCFLAGS += -O3
 else
-	CCFLAGS += -g -DDEBUG
+	CCFLAGS += -g3 -O0 -DDEBUG
 endif
 
 .PHONY: all
