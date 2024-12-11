@@ -1,13 +1,17 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <stdio.h>
 #include "linux.h"
 
-#define BUFMAX 512
+#define BUFMAX 8192
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
 void error(const char *fmt, ...);
 void debug(const char *fmt, ...);
+
+FILE *parse_args(int argc, char *argv[]);
+
 int cmpint(const void *a, const void *b);
 void parseln_lr(char *buf, int *a, int *b, int linesz, int width);
 

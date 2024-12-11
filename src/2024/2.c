@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include "utils.h"
 
-#define FILENAME "data/2024/2.txt"
-
 struct int_node {
 	struct list_head node;
 	int value;
@@ -117,11 +115,8 @@ int main(int argc, char *argv[])
 	char buf[BUFMAX];
 	int safe, unsafe;
 
-	fd = fopen(FILENAME, "r");
-	if (!fd)
-		error("fopen");
+	fd = parse_args(argc, argv);
 
-	fseek(fd, 0, SEEK_SET);
 	safe = 0;
 	unsafe = 0;
 

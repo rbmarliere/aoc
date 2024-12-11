@@ -27,6 +27,20 @@ void debug(const char *fmt, ...)
 #endif
 }
 
+FILE *parse_args(int argc, char *argv[])
+{
+	FILE *fd;
+
+	if (argc != 2)
+		error("usage: %s INPUT_FILE", argv[0]);
+
+	fd = fopen(argv[1], "r");
+	if (!fd)
+		error("fopen");
+
+	return fd;
+}
+
 int cmpint(const void *a, const void *b)
 {
 	int ia = *(const int *)a;
