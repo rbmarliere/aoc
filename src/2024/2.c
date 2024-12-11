@@ -114,6 +114,7 @@ int main(int argc, char *argv[])
 	FILE *fd;
 	char buf[BUFMAX];
 	int safe, unsafe;
+	struct int_node *i, *tmp;
 
 	fd = parse_args(argc, argv);
 
@@ -132,6 +133,11 @@ int main(int argc, char *argv[])
 
 		debug("safe (%d) unsafe (%d)", safe, unsafe);
 		debug("");
+
+		list_for_each_entry_safe(i, tmp, &head, node) {
+			list_del(&i->node);
+			free(i);
+		}
 	}
 
 	printf("%d\n", safe);
